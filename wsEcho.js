@@ -1,4 +1,4 @@
-//Dependencies:
+// Dependencies:
 const WebSocket = require('ws');
 const pEvent = require('p-event');
 
@@ -7,27 +7,27 @@ module.exports.handler = async () => {
   const ws = new WebSocket('wss://echo.websocket.org/', { origin: 'https://websocket.org' });
 
   // Function to be invoked when a 'connected' event is emitted from the websocket:
-  ws.on('open', function open() {
+  ws.on('open', () => {
     console.log('connected');
     ws.send(Date.now());
   });
 
   // Function to be invoked when a 'disconnected' event is emitted from the websocket:
-  ws.on('close', function close() {
+  ws.on('close', () => {
     console.log('disconnected');
   });
 
   // Function to be invoked when a 'message' event is emitted from the websocket:
-  ws.on('message', function incoming(data) {
+  ws.on('message', (data) => {
     console.log(`roundtrip time: ${Date.now() - data} ms`);
-    setTimeout(function timeout() { ws.send(Date.now()); }, 500);
+    setTimeout(() => { ws.send(Date.now()); }, 500);
   });
 
   try {
     // Use p-event package to await a 'message' event emission:
     const result = await pEvent(ws, 'message');
     console.info(`received: ${result}`);
-  } catch(e) {
+  } catch (e) {
     console.error(e);
   }
 
